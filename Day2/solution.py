@@ -2,42 +2,11 @@ inp = '''A Y
 B X
 C Z'''
 
+# Score values
+
 # win 8 (2 + 6)
 # loss 9 (1 + 0)
 # draw 15 (3 + 3)
-
-inpArr = inp.split('\n')
-res = 0
-
-ownScores = { 'X' : 1, 'Y' : 2, 'Z' : 3 }
-oppScores = { 'A' : 1, 'B' : 2, 'C' : 3 }
-
-# Iterate through the inputArray
-for game in inpArr:
-    
-    moves = game.split(' ')
-    oppMove = moves[0]
-    ownMove = moves[1]
-
-    res += ownScores[ownMove]
-    
-    # Check if draw
-    if ownScores[ownMove] == oppScores[oppMove]:
-        res += 3
-    
-    outcome = ownScores[ownMove] - oppScores[oppMove]
-
-    # Check if we win
-    if outcome == 1:
-        res += 6
-
-
-
-
-
-
-print(res)
-
 
 # opp:
 # A - Rock
@@ -52,3 +21,47 @@ print(res)
 # 0 - Loss
 # 3 - Draw
 # 6 - Win
+
+# Pt2 Strategy
+# X - Lose
+# Y - Draw
+# Z - Win
+
+inpArr = inp.split('\n')
+res = 0
+
+# Score calculator for pt1
+# Function that takes in my choice and opponent choice
+def scorePt1(myChoice, oppChoice):
+    strat = {}
+    if oppChoice == 'A':
+        strat = { 'X' : 4, 'Y' : 8, 'Z' : 3}
+    elif oppChoice == 'B':
+        strat = { 'X' : 1, 'Y' : 5, 'Z' : 9}
+    elif oppChoice == 'C':
+        strat = { 'X' : 7, 'Y' : 2, 'Z' : 6}
+    print(strat[myChoice])
+    return strat[myChoice]
+
+# Score calculator for pt2
+# Function that takes in the desired outcome and opponent choice
+def scorePt2(outcome, oppChoice):
+    strat = {}
+    if oppChoice == 'A':
+        strat = { 'X' : 3, 'Y' : 4, 'Z' : 8}
+    elif oppChoice == 'B':
+        strat = { 'X' : 1, 'Y' : 5, 'Z' : 9}
+    elif oppChoice == 'C':
+        strat = { 'X' : 2, 'Y' : 6, 'Z' : 7}
+    print(strat[outcome])
+    return strat[outcome]
+
+
+for game in inpArr:
+    moves = game.split(' ')
+    # res += scorePt1(moves[1], moves[0])
+    res += scorePt2(moves[1], moves[0])
+
+# Output result
+print(res)
+
