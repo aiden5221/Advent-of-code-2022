@@ -6,7 +6,7 @@ def parseInput():
         for line in f:
             # Assign all of the crates to dict of sets
             for field, value in enumerate(line):
-                #print(value)
+
                 if(value == '['):
                     index = field // 4
                     crate = line[field + 1]
@@ -46,6 +46,7 @@ def solutionPart1():
 def solutionPart2():
     crates, moves = parseInput()
     sol = []
+    
     for move in moves:
         numMoves = int(move[1].strip())
         source = int(move[3].strip())
@@ -59,5 +60,6 @@ def solutionPart2():
         sol.append(crates[i].pop(0))
 
     return ''.join(sol)
+    
 # solutionPart1()
 # solutionPart2()
