@@ -1,6 +1,3 @@
-# Check every point on a row with the manhattan distance of the sensor with its beacon
-# 
-
 
 def readInput(line):
     curLine = line.strip().split(':')
@@ -22,27 +19,51 @@ def getManDist(p1, p2):
     # print(f'p1:{p1} p2:{p2} manDist:{abs(int(p1[0]) - int(p2[0])) + abs(int(p1[1]) - int(p2[1]))}')
     return abs(int(p1[0]) - int(p2[0])) + abs(int(p1[1]) - int(p2[1]))
 
+def checkPossible(x,y):
+    for sensorX, sensorY, dist in sensors:
+        if getManDist((sensorX, sensorY), (x,y)) <= dist and (x,y) not in beacons:
+            return False
+    return True
+
 def solutionPart1(sensors, row):
     res = 0
-    # Loop for 100000 times
-    for i in range(0,10000):
-        # Loop through all of the sensors and beacons
-        for sensor in sensors:
-            # print(sensor)
-            curManDist = getManDist(sensor, (i, row))
-            if curManDist < sensors[sensor]:
-                res += 1
+    print(sensors)
+    
+    for x in range(min(x - dist for x, _, dist in sensors), max(x + dist for x, _, dist in sensors)):
+        if not checkPossible(x, row) and (x, row) not in beacons:
+            res += 1
+    
     return res
+
+def solutionPart2():
+    for sx, sy, d in sensors:
+        for dx in range(d + 2):
+            dy = (d + 1) - dx
+            for mx, my in [(-1, 1), (1, -1), (-1, -1), (1, 1)]:
+                x, y = sx + (dx * mx), sy + (dy * my)
+                if not(0<= x <= 4_000_000 and 0<=y<=4_000_000):
+                    continue
+                if checkPossible(x, y):
+                    print(x,y)
+                    return (x * 4_000_000 + y)
+
 
 if __name__ == '__main__':
     graph = {}
-    sensorManDistances = {}
+    beacons = set()
+    sensors = set()
+
     with(open('Day15\input.txt', 'r')) as f:
         for line in f:
             sensorX, sensorY, beaconX, beaconY = readInput(line)
-            graph[(sensorX, sensorY)] = (beaconX, beaconY)
-            sensorManDistances[(sensorX, sensorY)] = getManDist((sensorX, sensorY), (beaconX, beaconY))
+        
+            dist = getManDist((sensorX, sensorY), (beaconX, beaconY))
+
+            beacons.add((int(beaconX), int(beaconY)))
+            sensors.add((int(sensorX), int(sensorY), dist))
+            
             # print(f'SensorX:{sensorX} SensorY:{sensorY} BeaconX:{beaconX} BeaconY:{beaconY}')
     
-    print(solutionPart1(sensorManDistances, 10))
+    print(solutionPart1(sensors, 2000000))
+    print(solutionPart2())
     
